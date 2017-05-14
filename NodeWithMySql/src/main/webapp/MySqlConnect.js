@@ -6,23 +6,37 @@ var connection = mysql.createConnection({
   database : 'TRAX'
 });
 
+connection.connect();
 
-resp = function(callback)
-{
-	connection.connect();
-	connection.query('SELECT * from Trade limit 10', function (error, results, fields) {
-		console.log(error);
-		if (error) throw error;
-  for(var i = 0; i < 10; i++)
-	  {
-	  console.log('The ID is: ', results[i].trade_id);
-  		console.log('The Date is: ', results[i].trade_date);
-  		console.log('The Type is: ', results[i].trade_type);
-  		
-	  }
-  connection.end();
-  callback(JSON.stringify(results));
-})
-};
+module.exports = {
+	listTradesFromDB : function(callback) {
+		connection.query('SELECT * from Trade limit 10', function(error,
+				results, fields) {
+			console.log(error);
+			if (error)
+				throw error;
+			for (var i = 0; i < 10; i++) {
+				console.log('The ID is: ', results[i].trade_id);
+				console.log('The Date is: ', results[i].trade_date);
+				console.log('The Type is: ', results[i].trade_type);
 
-module.exports.resp = resp;
+			}
+			callback(JSON.stringify(results));
+		})
+	},
+	addTags: function(callback)
+    {
+		var date = new Date();
+        connection.query(
+            "INSERT INTO Trade VALUES (?, ?, ?)",
+            [102, date, "VIS"],
+            function(err, results, fields)
+            {
+                if (err) throw err;
+            }
+        )
+        callback(JSON.stringify("101"));
+    }
+}
+
+//module.exports.resp = resp;

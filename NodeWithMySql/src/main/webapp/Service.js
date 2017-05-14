@@ -1,19 +1,19 @@
 var express = require('express');
 var mysqlConnect = require('./MySqlConnect.js');
 var app = express();
+var express = require('express');
 
 
 app.get('/listTrades', function (req, res) {
    console.log('Result from WS: ');
    
-   var response = mysqlConnect.resp(function(response){
+   var response = mysqlConnect.listTradesFromDB(function(response){
 	   console.log('listTrades:'+response);
 	   res.send('listTrades:'+response);
    });
    
 })
 
-var express = require('express');
 
 // This responds with "Hello World" on the homepage
 app.get('/', function (req, res) {
@@ -23,9 +23,12 @@ app.get('/', function (req, res) {
 })
 
 // This responds a POST request for the homepage
-app.post('/', function (req, res) {
+app.get('/addUser', function (req, res) {
    console.log("Got a POST request for the homepage");
-   res.send('Hello POST');
+   var response = mysqlConnect.addTags(function(response){
+	   console.log('Added:'+response);
+	   res.send('Added:'+response);
+   });
 })
 
 // This responds a DELETE request for the /del_user page.
